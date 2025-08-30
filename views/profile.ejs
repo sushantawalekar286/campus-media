@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Campus Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <!-- Loading State -->
+    <div id="loadingState" class="container mt-4 text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading your profile...</p>
+    </div>
+
+    <!-- Profile Content -->
+    <div id="profileContent" class="container mt-4" style="display: none;">
+        <div class="row">
+            <!-- Profile Sidebar -->
+            <div class="col-lg-4">
+                <div class="profile-card">
+                    <div class="profile-header text-center">
+                        <div class="profile-avatar">
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <h3 class="profile-name" id="userName">Loading...</h3>
+                        <p class="profile-userid" id="userId">@loading...</p>
+                        <p class="profile-email" id="userEmail">loading@email.com</p>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <strong>College:</strong>
+                                <p id="userCollege">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-book"></i>
+                            <div>
+                                <strong>Branch:</strong>
+                                <p id="userBranch">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <strong>Year:</strong>
+                                <p id="userYear">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Member since:</strong>
+                                <p id="userCreatedAt">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button class="btn btn-outline-primary btn-sm" onclick="editProfile()">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="likedQuestionsCount">0</h4>
+                                <p>Liked Questions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="studyMaterialsCount">0</h4>
+                                <p>Study Materials</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="daysActive">0</h4>
+                                <p>Days Active</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="profile-tabs">
+                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="liked-tab" data-bs-toggle="tab" data-bs-target="#liked" type="button" role="tab">
+                                <i class="fas fa-heart"></i> Liked Questions
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="materials-tab" data-bs-toggle="tab" data-bs-target="#materials" type="button" role="tab">
+                                <i class="fas fa-book-open"></i> Study Materials
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">
+                                <i class="fas fa-chart-line"></i> Activity
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="profileTabsContent">
+                        <!-- Liked Questions Tab -->
+                        <div class="tab-pane fade show active" id="liked" role="tabpanel">
+                            <div class="tab-header">
+                                <h5>Your Liked Questions</h5>
+                                <p>Questions you've found helpful</p>
+                            </div>
+                            <div id="likedQuestionsContainer">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Loading liked questions...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Study Materials Tab -->
+                        <div class="tab-pane fade" id="materials" role="tabpanel">
+                            <div class="tab-header">
+                                <h5>Your Study Materials</h5>
+                                <p>Materials you've saved for later</p>
+                                <button class="btn btn-primary btn-sm" onclick="addStudyMaterial()">
+                                    <i class="fas fa-plus"></i> Add Material
+                                </button>
+                            </div>
+                            <div id="studyMaterialsContainer">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Loading study materials...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Tab -->
+                        <div class="tab-pane fade" id="activity" role="tabpanel">
+                            <div class="tab-header">
+                                <h5>Your Activity</h5>
+                                <p>Recent activity and engagement</p>
+                            </div>
+                            <div class="activity-timeline" id="activityTimeline">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Loading activity...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Study Material Modal -->
+    <div class="modal fade" id="addMaterialModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Study Material</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMaterialForm">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Link</label>
+                            <input type="url" class="form-control" name="link" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Technical">Technical</option>
+                                <option value="Aptitude">Aptitude</option>
+                                <option value="HR">HR</option>
+                                <option value="Programming">Programming</option>
+                                <option value="Data Structures">Data Structures</option>
+                                <option value="Algorithms">Algorithms</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStudyMaterial()">Add Material</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/profile.js"></script>
+</body>
+</html>

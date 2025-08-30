@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <div class="logo me-2">
+                <span class="star-icon">⭐</span>
+            </div>
+            <div>
+                <div class="brand-text">CAMPUS MEDIA</div>
+                <div class="brand-subtitle">Prep Hub</div>
+            </div>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/interview-questions">
+                        <i class="fas fa-question-circle"></i> Interview Questions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/study-materials">
+                        <i class="fas fa-book-open"></i> Study Material
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/chat">
+                        <i class="fas fa-comments"></i> Chat / Q&A
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/mock-interview">
+                        <i class="fas fa-user-tie"></i> Mock Interview
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav" id="authNav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav" id="userNav" style="display: none;">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i> <span id="userName">User</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/profile">
+                            <i class="fas fa-user"></i> Profile
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+// Check authentication status and update navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+    
+    if (token && userData) {
+        const user = JSON.parse(userData);
+        document.getElementById('authNav').style.display = 'none';
+        document.getElementById('userNav').style.display = 'flex';
+        document.getElementById('userName').textContent = user.fullName;
+    } else {
+        document.getElementById('authNav').style.display = 'flex';
+        document.getElementById('userNav').style.display = 'none';
+    }
+});
+
+function logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    window.location.href = '/login';
+}
+</script>

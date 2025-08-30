@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Media - Ace Your Placement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <!-- Hero Section -->
+    <section class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Ace Your Placement with Confidence</h1>
+                        <p class="hero-description">
+                            Join thousands of students preparing for their dream careers. Access curated interview questions, 
+                            study materials, and connect with peers in our vibrant community.
+                        </p>
+                        <div class="hero-buttons">
+                            <div id="guestButtons">
+                                <a href="/signup" class="btn btn-primary me-3">Get Started</a>
+                                <a href="/login" class="btn btn-outline-primary">Sign In</a>
+                            </div>
+                            <div id="userButtons" style="display: none;">
+                                <a href="/interview-questions" class="btn btn-primary me-3">Explore Questions</a>
+                                <a href="/profile" class="btn btn-outline-primary">My Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-illustration">
+                        <div class="illustration-container">
+                            <div class="character">
+                                <div class="character-avatar">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="character-body">
+                                    <div class="blazer"></div>
+                                    <div class="shirt"></div>
+                                    <div class="character-arm pointing"></div>
+                                </div>
+                            </div>
+                            <div class="screen-graphic">
+                                <div class="screen-border">
+                                    <div class="success-circle">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-5 fw-bold">Everything You Need to Succeed</h2>
+                    <p class="lead text-muted">Comprehensive tools and resources for your placement journey</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3 class="feature-title">Interview Questions</h3>
+                        <p class="feature-description">
+                            Access a vast collection of real interview questions from top companies, 
+                            categorized by difficulty and frequency.
+                        </p>
+                        <a href="/interview-questions" class="feature-link">
+                            Explore Questions <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 class="feature-title">Study Material</h3>
+                        <p class="feature-description">
+                            Curated study materials, tutorials, and resources to help you master 
+                            technical concepts and skills.
+                        </p>
+                        <a href="/study-materials" class="feature-link">
+                            Browse Materials <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3 class="feature-title">Chat & Q&A</h3>
+                        <p class="feature-description">
+                            Connect with fellow students, ask questions, and share experiences 
+                            in our active community chat.
+                        </p>
+                        <a href="/chat" class="feature-link">
+                            Join Chat <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3 class="feature-title">Personal Dashboard</h3>
+                        <p class="feature-description">
+                            Track your progress, save favorite questions, and manage your 
+                            study materials in one place.
+                        </p>
+                        <a href="/profile" class="feature-link">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Interview Questions</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Companies Covered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check authentication status and update UI
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+            
+            if (token && userData) {
+                // User is logged in
+                document.getElementById('guestButtons').style.display = 'none';
+                document.getElementById('userButtons').style.display = 'block';
+            } else {
+                // User is not logged in
+                document.getElementById('guestButtons').style.display = 'block';
+                document.getElementById('userButtons').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - <%= subject.name %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <a href="<%= backUrl %>" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Subjects</span>
+            </a>
+            <div class="year-badge">
+                <i class="fas fa-book"></i>
+                <span><%= year.name %> • <%= subject.name %></span>
+            </div>
+            <h1 class="main-title">
+                Study<br>
+                <span class="highlight">Materials</span>
+            </h1>
+        </div>
+    </header>
+
+    <!-- Search and Filter Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search materials...">
+            <button class="filter-btn">
+                <i class="fas fa-filter"></i>
+                <span>Filter</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <main class="main-content">
+        <div class="content-card">
+            <% if (materials && materials.length > 0) { %>
+                <div class="materials-list">
+                    <% materials.forEach(material => { %>
+                        <div class="material-item">
+                            <div class="material-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="material-info">
+                                <h3><%= material.title %></h3>
+                                <p><%= material.type %> • <%= material.size %></p>
+                            </div>
+                            <button class="download-btn">
+                                <i class="fas fa-download"></i>
+                                <span>Download</span>
+                            </button>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h2>No materials found</h2>
+                    <p>Try adjusting your search or check back later for new materials.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+</body>
+</html>

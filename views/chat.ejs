@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Chat - Campus Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <!-- Chat Header -->
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">💬 General Chat Room</h2>
+                    <p class="text-muted">Share experiences, ask questions, and get guidance from seniors and peers</p>
+                </div>
+
+                <!-- Authentication Check -->
+                <div id="authCheck" class="text-center mb-4" style="display: none;">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Please <a href="/login" class="alert-link">login</a> to participate in the chat.
+                    </div>
+                </div>
+
+                <!-- Chat Container -->
+                <div class="card shadow-sm" id="chatCard">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-comments"></i> Live Chat
+                            <span class="badge bg-light text-primary ms-2" id="onlineCount">0</span>
+                        </h5>
+                    </div>
+                    <div class="card-body chat-container" id="chatContainer" style="height: 400px; overflow-y: auto;">
+                        <% messages.reverse().forEach(function(message) { %>
+                            <div class="message mb-3">
+                                <div class="d-flex">
+                                    <div class="avatar me-2">
+                                        <span class="avatar-text"><%= message.username.charAt(0).toUpperCase() %></span>
+                                    </div>
+                                    <div class="message-content flex-grow-1">
+                                        <div class="message-header">
+                                            <strong class="username"><%= message.username %></strong>
+                                            <small class="text-muted ms-2"><%= new Date(message.createdAt).toLocaleString() %></small>
+                                        </div>
+                                        <div class="message-text">
+                                            <%= message.message %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                    <div class="card-footer">
+                        <form id="chatForm" class="d-flex">
+                            <input type="text" class="form-control me-2" id="messageInput" placeholder="Type your message..." required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Chat Guidelines -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Chat Guidelines</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li><i class="fas fa-check text-success me-2"></i>Be respectful and helpful to others</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Share your interview experiences and tips</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Ask questions about company test patterns</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Provide guidance to juniors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+</html>
