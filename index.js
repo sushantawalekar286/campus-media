@@ -301,13 +301,57 @@ app.delete('/api/profile/study-materials/:materialId', authenticateToken, async 
 });
 
 // API Routes for Questions
-app.post('/api/questions', async (req, res) => {
+// Add this route or modify existing question creation route
+app.post('/api/questions', authenticateToken, async (req, res) => {
     try {
-        const question = new Question(req.body);
-        await question.save();
-        res.status(201).json(question);
+        const { company, role, question, frequency } = req.body;
+
+        // Basic validation
+        if (!company || !role || !question) {
+            return res.status(400).json({
+                success: false,
+                message: 'Company, role, and question are required'
+            });
+        }
+
+        // Check for duplicate question
+        const existingQuestion = await Question.findOne({
+            question: { $regex: new RegExp('^' + question.trim() + '$', 'i') },
+            company: company
+        });
+
+        if (existingQuestion) {
+            return res.status(400).json({
+                success: false,
+                message: 'This question already exists for this company'
+            });
+        }
+
+        // If no duplicate found, create new question
+        const newQuestion = new Question({
+            company,
+            role,
+            question,
+            frequency: frequency || 'Medium',
+            createdBy: req.user.id,
+            createdAt: new Date()
+        });
+
+        await newQuestion.save();
+        
+        // Return the newly created question
+        res.status(201).json({
+            success: true,
+            message: 'Question added successfully',
+            question: newQuestion
+        });
+
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error adding question:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error adding question: ' + error.message
+        });
     }
 });
 

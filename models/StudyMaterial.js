@@ -27,11 +27,12 @@ const studyMaterialSchema = new mongoose.Schema({
         type: String,
         enum: ['Beginner', 'Intermediate', 'Advanced']
     },
-    postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+  postedBy: {
+  type: String,
+  required: true,
+  trim: true
+},
+
     likes: {
         type: Number,
         default: 0

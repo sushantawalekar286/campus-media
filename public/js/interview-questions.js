@@ -81,79 +81,7 @@ function sortQuestions(sortBy) {
     }
 }
 
-function displayQuestions() {
-    const container = document.getElementById('questionsContainer');
-    if (!container) return;
 
-    if (filteredQuestions.length === 0) {
-        container.innerHTML = `
-            <div class="text-center py-5">
-                <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                <h5>No questions found</h5>
-                <p class="text-muted">Try adjusting your search or filters</p>
-            </div>
-        `;
-        return;
-    }
-
-    container.innerHTML = filteredQuestions.map(question => `
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm question-card" data-id="${question._id}">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="company-logo me-2">
-                            <div class="default-logo">
-                                ${question.company.split(' ')[0].charAt(0).toUpperCase()}
-                            </div>
-                        </div>
-                        <div>
-                            <h6 class="mb-0">${question.company}</h6>
-                            <small class="text-muted">${question.role}</small>
-                        </div>
-                    </div>
-                    <div class="frequency-badge">
-                        <span class="badge bg-${getFrequencyColor(question.frequency)}">
-                            ${getFrequencyStars(question.frequency)}
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <p class="card-text question-preview">${question.question.substring(0, 150)}${question.question.length > 150 ? '...' : ''}</p>
-                    <div class="question-details" style="display: none;">
-                        <p class="card-text">${question.question}</p>
-                        <div class="row">
-                            <div class="col-6">
-                                <small class="text-muted">Round: ${question.round}</small>
-                            </div>
-                            <div class="col-6">
-                                <small class="text-muted">Difficulty: ${question.difficulty}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <button class="btn btn-sm btn-outline-primary me-2" onclick="likeQuestion('${question._id}')">
-                                <i class="fas fa-thumbs-up"></i> <span class="likes-count">${question.likes}</span>
-                            </button>
-                            <span class="text-muted me-3">
-                                <i class="fas fa-eye"></i> <span class="views-count">${question.views}</span>
-                            </span>
-                        </div>
-                        <div class="text-end">
-                            <small class="text-muted">By ${question.postedBy}</small><br>
-                            <small class="text-muted">${new Date(question.createdAt).toLocaleDateString()}</small>
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-link mt-2 expand-btn" onclick="toggleQuestionDetails(this)">
-                        Show Details
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
 
 function toggleQuestionDetails(button) {
     const card = button.closest('.card');
@@ -212,62 +140,140 @@ async function likeQuestion(questionId) {
     }
 }
 
-async function submitQuestion() {
-    const form = document.getElementById('addQuestionForm');
-    const formData = new FormData(form);
-    
-    const questionData = {
-        company: formData.get('company'),
-        role: formData.get('role'),
-        question: formData.get('question'),
-        round: formData.get('round'),
-        difficulty: formData.get('difficulty'),
-        frequency: formData.get('frequency'),
-        postedBy: formData.get('postedBy')
-    };
+// ...existing code...
 
-    // Show loading state
-    const submitBtn = document.querySelector('#addQuestionModal .btn-primary');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const btnLoading = submitBtn.querySelector('.btn-loading');
+async function submitQuestion() {
+    const form = document.getElementById('questionForm');
     
-    btnText.style.display = 'none';
-    btnLoading.style.display = 'inline-block';
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Adding...';
 
     try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            showAlert('Please login first', 'error');
+            return;
+        }
+
+        const formData = new FormData(form);
+        const questionData = {
+            company: formData.get('company'),
+            role: formData.get('role'),
+            question: formData.get('question'),
+            frequency: formData.get('frequency')
+        };
+
+        // Validate required fields
+        if (!questionData.company || !questionData.role || !questionData.question) {
+            showAlert('Please fill all required fields', 'error');
+            return;
+        }
+
         const response = await fetch('/api/questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(questionData)
         });
 
-        if (response.ok) {
-            const newQuestion = await response.json();
-            allQuestions.unshift(newQuestion);
-            filteredQuestions = [...allQuestions];
-            displayQuestions();
-            
-            // Close modal and reset form
-            bootstrap.Modal.getInstance(document.getElementById('addQuestionModal')).hide();
-            form.reset();
-            
-            showAlert('Question added successfully!', 'success');
-        } else {
-            const data = await response.json();
-            showAlert(data.error || 'Failed to add question', 'error');
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to add question');
         }
+
+        // Success
+        showAlert('Question added successfully!', 'success');
+        form.reset();
+        await loadQuestions(); // Reload the questions list
+        
+        // Close modal if using Bootstrap modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addQuestionModal'));
+        if (modal) {
+            modal.hide();
+        }
+
     } catch (error) {
-        showAlert('Network error', 'error');
+        console.error('Error:', error);
+        showAlert(error.message || 'Error adding question', 'error');
     } finally {
         // Reset button state
-        btnText.style.display = 'inline-block';
-        btnLoading.style.display = 'none';
         submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
     }
 }
+
+// Add this helper function if not already present
+function showAlert(message, type = 'info') {
+    const alertContainer = document.createElement('div');
+    alertContainer.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+    alertContainer.role = 'alert';
+    alertContainer.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertContainer);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        alertContainer.remove();
+    }, 5000);
+}
+
+function displayQuestions() {
+    const container = document.getElementById('questionsContainer');
+    if (!container) return;
+
+    if (filteredQuestions.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5>No questions found</h5>
+                <p class="text-muted">Try adjusting your search or filters</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Use questions-flex container
+    container.className = 'questions-flex';
+    
+    container.innerHTML = filteredQuestions.map(question => `
+        <div class="question-card">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="company-name">${question.company}</h6>
+                            <small class="text-muted">${question.role}</small>
+                        </div>
+                        <div class="frequency-badge">
+                            ${getFrequencyStars(question.frequency)}
+                        </div>
+                    </div>
+                    <p class="card-text">${question.question}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-sm btn-outline-primary" onclick="toggleQuestionDetails(this)">
+                            Show Details
+                        </button>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-link like-button" onclick="likeQuestion('${question._id}')">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>${question.likes || 0}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
 
 function clearFilters() {
     document.getElementById('searchInput').value = '';
